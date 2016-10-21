@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/material_dropdown_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?selectableItemBackgroundBorderless"
+    android:background="@android:color/white"
+    android:focusable="true"
+    android:clickable="true"
+    android:padding="12dp">
+
+    <ImageView
+        android:id="@+id/material_dropdown_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/ic_economic_class"/>
+
+    <TextView
+        android:id="@+id/material_dropdown_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/material_dropdown_sort"
+        android:layout_toEndOf="@+id/material_dropdown_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:text="Economy Class"
+        android:textStyle="bold"
+        android:textColor="#6c6c6c"
+        android:fontFamily="sans-serif-light"
+        />
+
+    <TextView
+        android:id="@+id/material_dropdown_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/material_dropdown_title"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toStartOf="@+id/material_dropdown_sort"
+        android:layout_toEndOf="@+id/material_dropdown_icon"
+        android:text="Super Saver"
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-light"
+        />
+
+    <ImageView
+        android:id="@+id/material_dropdown_sort"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/material_dropdown_subtitle"
+        android:src="@drawable/ic_dropdown_sort"
+
+        />
+
+</RelativeLayout>

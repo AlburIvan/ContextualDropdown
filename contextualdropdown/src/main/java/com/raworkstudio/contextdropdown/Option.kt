@@ -1,4 +1,4 @@
-package com.raworkstudio.contexdropdown
+package com.raworkstudio.contextdropdown
 
 import android.graphics.Bitmap
 import android.support.annotation.DrawableRes

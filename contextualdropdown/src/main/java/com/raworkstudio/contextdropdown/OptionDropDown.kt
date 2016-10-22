@@ -1,4 +1,4 @@
-package com.raworkstudio.contexdropdown
+package com.raworkstudio.contextdropdown
 
 import android.animation.Animator
 import android.content.Context

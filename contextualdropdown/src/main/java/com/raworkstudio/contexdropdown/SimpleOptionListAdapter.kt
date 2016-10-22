@@ -1,6 +1,5 @@
 package com.raworkstudio.contexdropdown
 
-import android.app.Activity
 import android.content.Context
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater

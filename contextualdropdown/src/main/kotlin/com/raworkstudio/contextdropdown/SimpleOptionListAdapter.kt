@@ -27,7 +27,7 @@ class SimpleOptionListAdapter(context: Context, textViewResourceId: Int = 0, opt
         var view = convertView
 
         if(view == null) {
-            view = parent!!.inflate( R.layout.feature_dropdown_layout)
+            view = parent!!.inflate( R.layout.feature_dropdown_list_item)
         }
 
         val option = getItem(position)
@@ -38,5 +38,7 @@ class SimpleOptionListAdapter(context: Context, textViewResourceId: Int = 0, opt
 
         return view
     }
+
+
 
 }

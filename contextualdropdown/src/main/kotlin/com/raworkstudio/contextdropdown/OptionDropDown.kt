@@ -1,3 +1,18 @@
+/*
+* Copyright 2016 AlburIvan [Ivan Alberto Alburquerque Mejia]
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*  http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.raworkstudio.contextdropdown
 
 import android.animation.Animator
@@ -13,52 +28,60 @@ import java.util.*
 import kotlinx.android.synthetic.main.feature_dropdown_layout.view.*
 
 /**
- * Created by Ivan on 10/21/2016
+ *  (っ･_･)っ
+ *
+ *  @author Iván Alburquerque
+ *  @version 1.0.0
  */
-class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
+class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int = 0) :
         RelativeLayout(context, attrs, defStyleAttr) {
 
-    private val TAG: String = this.javaClass.simpleName
-
-
-//    var containerView: RelativeLayout
+    val TAG: String = this.javaClass.simpleName
     var options: MutableList<Option> = ArrayList()
-    var adapter: SimpleOptionListAdapter
     var listPopup: ListPopupWindow
+    var adapter: SimpleOptionListAdapter? = null
 
 
 
+
+
+
+
+    /**
+     *
+     */
+    private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false) : View {
+        return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
+    }
+
+
+    /**
+     * Method that initializes this custom view's default values and sets listeners
+     */
     init {
 
-//        options.add(Option("Economy Class", "Super Saver", R.drawable.ic_economic_class))
-//        options.add(Option("Premium Class", "More Comfortable", R.drawable.ic_premium_class))
-//        options.add(Option("Business Class", "High Quality", R.drawable.ic_business_class))
-//        options.add(Option("First Class", "Most Expensive", R.drawable.ic_first_class))
-
-
         inflate(R.layout.feature_dropdown_layout) as RelativeLayout
-//        containerView = inflate(R.layout.feature_dropdown_layout) as RelativeLayout
 
         material_dropdown_container.setOnClickListener { it -> onParentClicked(it) }
 
-
-        adapter = SimpleOptionListAdapter(getContext(), android.R.layout.simple_list_item_1, options)
-
         listPopup = ListPopupWindow(context)
-        listPopup.setAdapter(adapter)
+
         listPopup.anchorView = material_dropdown_container
         listPopup.width = ListPopupWindow.MATCH_PARENT
         listPopup.setOnItemClickListener { adapterView, view, i, l ->
             onItemSelected(i)
             listPopup.dismiss()
         }
-
-
     }
 
-    private fun onItemSelected(position: Int) {
 
-        val option = adapter.getItem(position)
+    private fun onParentClicked(parent: View) : Unit {
+        listPopup.show()
+    }
+
+    private fun onItemSelected(position: Int) : Unit {
+
+        val option = adapter?.getItem(position)
 
         material_dropdown_title.animate()
                 .setDuration(350)
@@ -68,7 +91,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int)
                     override fun onAnimationStart(animation: Animator?) {}
 
                     override fun onAnimationEnd(animation: Animator?) {
-                        material_dropdown_title.text = option.title
+                        material_dropdown_title.text = option?.title
 
                         material_dropdown_title.animate()
                                 .setDuration(150)
@@ -84,7 +107,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int)
                 .start()
 
 
-        if(option.icon != null) {
+        if(option?.icon != null) {
             material_dropdown_icon.animate()
                     .setDuration(250)
                     .alphaBy(-20f)
@@ -98,7 +121,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int)
                                     .alphaBy(20f)
                                     .start()
 
-                            material_dropdown_icon.setImageBitmap(option.icon)
+                            material_dropdown_icon.setImageBitmap(option?.icon)
                         }
 
                         override fun onAnimationRepeat(animation: Animator?) {}
@@ -110,17 +133,13 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int)
     }
 
 
-    private fun onParentClicked(parent: View) : Unit {
-        listPopup.show()
+    fun setOptionAdapter(adapter: SimpleOptionListAdapter) {
+        this.listPopup.setAdapter(adapter)
+        this.adapter = adapter
+
+        adapter.notifyDataSetChanged()
     }
 
-
-    /**
-     *
-     */
-    private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false) : View {
-        return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
-    }
 
     /**
      * Computes the widest view in an adapter, best used when you need to wrap_content on a ListView, please be careful
@@ -131,10 +150,9 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int)
      * @return The pixel width of the widest View
      */
     private fun getWidestView(context: Context, adapter: Adapter): Int {
+
         var maxWidth = 0
-
         var view: View? = null
-
         val fakeParent = FrameLayout(context)
 
         for (i: Int in intArrayOf(adapter.count)){

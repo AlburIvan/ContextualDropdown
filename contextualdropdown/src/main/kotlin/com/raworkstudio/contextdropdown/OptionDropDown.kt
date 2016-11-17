@@ -17,6 +17,10 @@ package com.raworkstudio.contextdropdown
 
 import android.animation.Animator
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.support.annotation.LayoutRes
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -26,6 +30,7 @@ import android.widget.*
 import java.util.*
 
 import kotlinx.android.synthetic.main.feature_dropdown_layout.view.*
+import kotlin.concurrent.schedule
 
 /**
  *  (っ･_･)っ
@@ -36,15 +41,19 @@ import kotlinx.android.synthetic.main.feature_dropdown_layout.view.*
 class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int = 0) :
         RelativeLayout(context, attrs, defStyleAttr) {
 
+    /** Debug TAG */
     val TAG: String = this.javaClass.simpleName
+
+    /** */
     var options: MutableList<Option> = ArrayList()
+
+    /** */
     var listPopup: ListPopupWindow
-    var adapter: SimpleOptionListAdapter? = null
 
+    /** */
+    var mOptionAdapter: SimpleOptionListAdapter? = null
 
-
-
-
+    var callback: onItemSelectedCallback? = null
 
 
     /**
@@ -62,7 +71,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
 
         inflate(R.layout.feature_dropdown_layout) as RelativeLayout
 
-        material_dropdown_container.setOnClickListener { it -> onParentClicked(it) }
+        material_dropdown_container.setOnClickListener { it -> onDropdownClicked(it) }
 
         listPopup = ListPopupWindow(context)
 
@@ -75,14 +84,16 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
     }
 
 
-    private fun onParentClicked(parent: View) : Unit {
+    private fun onDropdownClicked(parent: View) : Unit {
         listPopup.show()
     }
 
     private fun onItemSelected(position: Int) : Unit {
 
-        val option = adapter?.getItem(position)
+        val option = mOptionAdapter?.getItem(position)
 
+        // animate the title down, while down, change the title's text
+        // and then animate a slide up
         material_dropdown_title.animate()
                 .setDuration(350)
                 .alphaBy(-30f)
@@ -106,66 +117,84 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
                 })
                 .start()
 
+        material_dropdown_icon.animate()
+                .setDuration(250)
+                .alphaBy(-20f)
+                .setListener(object: Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: Animator?) {}
 
-        if(option?.icon != null) {
-            material_dropdown_icon.animate()
-                    .setDuration(250)
-                    .alphaBy(-20f)
-                    .setListener(object: Animator.AnimatorListener {
-                        override fun onAnimationStart(animation: Animator?) {}
+                    override fun onAnimationEnd(animation: Animator?) {
 
-                        override fun onAnimationEnd(animation: Animator?) {
+                        material_dropdown_icon.animate()
+                                .setDuration(250)
+                                .alphaBy(20f)
+                                .start()
 
-                            material_dropdown_icon.animate()
-                                    .setDuration(250)
-                                    .alphaBy(20f)
-                                    .start()
-
+                        if(option?.icon != null) {
                             material_dropdown_icon.setImageBitmap(option?.icon)
+                        } else {
+                            material_dropdown_icon.setImageDrawable(
+                                    resources.getDrawable(option!!.drawableRes, null)
+                            )
                         }
+                    }
 
-                        override fun onAnimationRepeat(animation: Animator?) {}
+                    override fun onAnimationRepeat(animation: Animator?) {}
 
-                        override fun onAnimationCancel(animation: Animator?) {}
-                    })
-                    .start()
-        }
+                    override fun onAnimationCancel(animation: Animator?) {}
+                })
+                .start()
+
+        // create a daemon thread
+        val timer = Timer("schedule", true)
+
+        // schedule a single event
+        timer.schedule( delay = 400L, action = {
+            if(callback != null) {
+                callback!!.onItemSelected(option!!)
+            }
+        }).run()
     }
 
 
-    fun setOptionAdapter(adapter: SimpleOptionListAdapter) {
+    fun setOnItemSelectedCallback(callback: onItemSelectedCallback): Unit {
+        this.callback = callback
+    }
+
+
+    fun setOptionsAdapter(adapter: SimpleOptionListAdapter) {
         this.listPopup.setAdapter(adapter)
-        this.adapter = adapter
+        this.mOptionAdapter = adapter
 
         adapter.notifyDataSetChanged()
     }
 
 
     /**
-     * Computes the widest view in an adapter, best used when you need to wrap_content on a ListView, please be careful
-     * and don't use it on an adapter that is extremely numerous in items or it will take a long time.
+     * Computes the widest view in an mOptionAdapter, best used when you need to wrap_content on a ListView, please be careful
+     * and don't use it on an mOptionAdapter that is extremely numerous in items or it will take a long time.
      *
      * @param context Some context
-     * @param adapter The adapter to process
+     * @param mOptionAdapter The mOptionAdapter to process
      * @return The pixel width of the widest View
      */
-    private fun getWidestView(context: Context, adapter: Adapter): Int {
-
-        var maxWidth = 0
-        var view: View? = null
-        val fakeParent = FrameLayout(context)
-
-        for (i: Int in intArrayOf(adapter.count)){
-            view = adapter.getView(i, view, fakeParent)
-            view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-            val width = view.measuredWidth
-
-            if (width > maxWidth) {
-                maxWidth = width
-            }
-        }
-
-        return maxWidth
-    }
+    //    private fun getWidestView(context: Context, mOptionAdapter: Adapter): Int {
+//
+//        var maxWidth = 0
+//        var view: View? = null
+//        val fakeParent = FrameLayout(context)
+//
+//        for (i: Int in intArrayOf(mOptionAdapter.count)){
+//            view = mOptionAdapter.getView(i, view, fakeParent)
+//            view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
+//            val width = view.measuredWidth
+//
+//            if (width > maxWidth) {
+//                maxWidth = width
+//            }
+//        }
+//
+//        return maxWidth
+//    }
 
 }

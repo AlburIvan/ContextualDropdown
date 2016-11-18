@@ -17,12 +17,9 @@ package com.raworkstudio.contextdropdown
 
 import android.animation.Animator
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.os.Handler
 import android.support.annotation.LayoutRes
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,26 +45,32 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
     var options: MutableList<Option> = ArrayList()
 
     /** */
-    var listPopup: ListPopupWindow
+    var listPopup: ListPopupWindow? = null
 
     /** */
     var mOptionAdapter: SimpleOptionListAdapter? = null
 
+    /** */
     var callback: onItemSelectedCallback? = null
 
 
-    /**
-     *
-     */
-    private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false) : View {
-        return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
+    constructor(context: Context?) : super(context){
+        initialize()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet) : super(context, attrs) {
+        initialize()
+    }
+
+    constructor(context: Context?, attrs: AttributeSet, defStyle : Int) : super(context, attrs, defStyle){
+        initialize()
     }
 
 
     /**
      * Method that initializes this custom view's default values and sets listeners
      */
-    init {
+    private fun initialize() {
 
         inflate(R.layout.feature_dropdown_layout) as RelativeLayout
 
@@ -168,6 +171,26 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
 
         adapter.notifyDataSetChanged()
     }
+
+
+
+    /**
+     *
+     */
+    private fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false) : View {
+        return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
+    }
+
+    /**
+     *
+     */
+    private fun View.applyDimension(value: Float, type : Int = TypedValue.COMPLEX_UNIT_DIP): Float{
+        val metrics  = resources.displayMetrics
+        val resultPix = TypedValue.applyDimension(type, value, metrics)
+        return resultPix
+    }
+
+
 
 
     /**

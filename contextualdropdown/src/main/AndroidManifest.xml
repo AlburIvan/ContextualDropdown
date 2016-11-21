@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.raworkstudio.contextdropdown">
+    package="com.raworkstudio.contextualdropdown">
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:supportsRtl="true">

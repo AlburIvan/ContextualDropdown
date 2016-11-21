@@ -2,9 +2,12 @@ package com.raworkstudio.contextdropdown
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.RelativeLayout
 import android.widget.Toast
 import com.raworkstudio.contextualdropdown.Option
-import com.raworkstudio.contextualdropdown.R
+import com.raworkstudio.contextualdropdown.OptionDropDown
 import com.raworkstudio.contextualdropdown.SimpleOptionListAdapter
 import com.raworkstudio.contextualdropdown.onItemSelectedCallback
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-//        val opDropdown = OptionDropDown(context = baseContext, attrs = null, defStyleAttr = 0)
+        val opDropdown = OptionDropDown(context = baseContext, attrs = null, defStyleAttr = 0)
 //        val opDropdown = findViewById(R.id.optiondropdown) as OptionDropDown
 
-        optiondropdown.setOnItemSelectedCallback(object : onItemSelectedCallback {
+        opDropdown.setOnItemSelectedCallback(object : onItemSelectedCallback {
             override fun onItemSelected(selected: Option) {
                 Toast.makeText(
                         applicationContext, // context
@@ -45,12 +48,12 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        optiondropdown.setOptionsAdapter(
+        opDropdown.setOptionsAdapter(
                 SimpleOptionListAdapter(this, 0, options)
         )
 
-//        val layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-//        addContentView(opDropdown, layoutParams)
+        val layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        addContentView(opDropdown, layoutParams)
 
 //        addContentView()
 //        var optionDropdown = OptionDropDown(applicationContext, null)

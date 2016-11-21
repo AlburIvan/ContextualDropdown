@@ -57,6 +57,17 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
     var callback: onItemSelectedCallback? = null
 
 
+//    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int ): this {
+//
+//    }
+
+//    fun OptionDropDown
+
+
+//    fun OptionDropDown(context: Context?, attrs: AttributeSet?) {
+//        initialize()
+//    }
+
     init {
 
         val layout = inflate(R.layout.feature_dropdown_layout) as RelativeLayout
@@ -81,7 +92,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
     /**
      * Method that initializes this custom view's default values and sets listeners
      */
-    /*private fun initialize() {
+    private fun initialize() {
 
         inflate(R.layout.feature_dropdown_layout) as RelativeLayout
 
@@ -95,7 +106,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
             onItemSelected(i)
             listPopup?.dismiss()
         }
-    }*/
+    }
 
 
     private fun onDropdownClicked(parent: View) : Unit {

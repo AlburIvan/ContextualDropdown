@@ -13,12 +13,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.raworkstudio.contextdropdown
+package com.raworkstudio.contextualdropdown
 
 import android.animation.Animator
 import android.content.Context
 import android.support.annotation.LayoutRes
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.*
 import java.util.*
 
+import kotlinx.android.synthetic.main.*
 import kotlinx.android.synthetic.main.feature_dropdown_layout.view.*
 import kotlin.concurrent.schedule
 
@@ -35,6 +37,7 @@ import kotlin.concurrent.schedule
  *  @author Iván Alburquerque
  *  @version 1.0.0
  */
+@SuppressWarnings("ALL")
 class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int = 0) :
         RelativeLayout(context, attrs, defStyleAttr) {
 
@@ -54,23 +57,31 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
     var callback: onItemSelectedCallback? = null
 
 
-    constructor(context: Context?) : super(context){
-        initialize()
+    init {
+
+        val layout = inflate(R.layout.feature_dropdown_layout) as RelativeLayout
+
+        layout.material_dropdown_container
+                .setOnClickListener { it -> onDropdownClicked(it) }
+
+        listPopup = ListPopupWindow(context)
+
+        listPopup?.anchorView = material_dropdown_container
+        listPopup?.width = ListPopupWindow.MATCH_PARENT
+        listPopup?.setOnItemClickListener { adapterView, view, i, l ->
+            onItemSelected(i)
+            listPopup?.dismiss()
+        }
+
+        Log.d(TAG,"${this.javaClass.simpleName} initialized")
     }
 
-    constructor(context: Context?, attrs: AttributeSet) : super(context, attrs) {
-        initialize()
-    }
-
-    constructor(context: Context?, attrs: AttributeSet, defStyle : Int) : super(context, attrs, defStyle){
-        initialize()
-    }
 
 
     /**
      * Method that initializes this custom view's default values and sets listeners
      */
-    private fun initialize() {
+    /*private fun initialize() {
 
         inflate(R.layout.feature_dropdown_layout) as RelativeLayout
 
@@ -78,18 +89,21 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
 
         listPopup = ListPopupWindow(context)
 
-        listPopup.anchorView = material_dropdown_container
-        listPopup.width = ListPopupWindow.MATCH_PARENT
-        listPopup.setOnItemClickListener { adapterView, view, i, l ->
+        listPopup?.anchorView = material_dropdown_container
+        listPopup?.width = ListPopupWindow.MATCH_PARENT
+        listPopup?.setOnItemClickListener { adapterView, view, i, l ->
             onItemSelected(i)
-            listPopup.dismiss()
+            listPopup?.dismiss()
         }
-    }
+    }*/
 
 
     private fun onDropdownClicked(parent: View) : Unit {
-        listPopup.show()
+        listPopup?.show()
     }
+
+    // TODO add long press (hold, drag and select) behavior
+    private fun onDropdownDragSelect() : Unit {}
 
     private fun onItemSelected(position: Int) : Unit {
 
@@ -154,7 +168,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
         // schedule a single event
         timer.schedule( delay = 400L, action = {
             if(callback != null) {
-                callback!!.onItemSelected(option!!)
+                callback?.onItemSelected(option!!)
             }
         }).run()
     }
@@ -166,12 +180,18 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
 
 
     fun setOptionsAdapter(adapter: SimpleOptionListAdapter) {
-        this.listPopup.setAdapter(adapter)
+        this.listPopup!!.setAdapter(adapter)
         this.mOptionAdapter = adapter
 
         adapter.notifyDataSetChanged()
     }
 
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val width = measuredWidth
+        setMeasuredDimension(width, width)
+    }
 
 
     /**

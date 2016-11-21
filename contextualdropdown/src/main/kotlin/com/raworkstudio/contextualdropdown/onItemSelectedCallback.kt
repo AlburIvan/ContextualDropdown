@@ -1,4 +1,4 @@
-package com.raworkstudio.contextdropdown
+package com.raworkstudio.contextualdropdown
 
 /**
  * Created by Ivan Alburquerque on 11/17/2016

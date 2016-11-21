@@ -1,4 +1,4 @@
-package com.raworkstudio.contextdropdown
+package com.raworkstudio.contextualdropdown
 
 import android.content.Context
 import android.support.annotation.LayoutRes

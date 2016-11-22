@@ -61,18 +61,18 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
 //
 //    }
 
-//    fun OptionDropDown
-
 
 //    fun OptionDropDown(context: Context?, attrs: AttributeSet?) {
 //        initialize()
 //    }
 
-    init {
+   /* init {
 
-        val layout = inflate(R.layout.feature_dropdown_layout) as RelativeLayout
+//        val layout = inflate(R.layout.feature_dropdown_layout)  as RelativeLayout
 
-        layout.material_dropdown_container
+        inflate(R.layout.feature_dropdown_layout)
+
+        material_dropdown_container
                 .setOnClickListener { it -> onDropdownClicked(it) }
 
         listPopup = ListPopupWindow(context)
@@ -85,16 +85,16 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
         }
 
         Log.d(TAG,"${this.javaClass.simpleName} initialized")
-    }
+    }*/
 
 
 
     /**
      * Method that initializes this custom view's default values and sets listeners
      */
-    private fun initialize() {
+   /* private fun initialize() {
 
-        inflate(R.layout.feature_dropdown_layout) as RelativeLayout
+        inflate(R.layout.feature_dropdown_layout) // as RelativeLayout
 
         material_dropdown_container.setOnClickListener { it -> onDropdownClicked(it) }
 
@@ -106,7 +106,7 @@ class OptionDropDown(context: Context?, attrs: AttributeSet?, defStyleAttr: Int 
             onItemSelected(i)
             listPopup?.dismiss()
         }
-    }
+    }*/
 
 
     private fun onDropdownClicked(parent: View) : Unit {
